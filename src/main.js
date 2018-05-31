@@ -5,7 +5,10 @@ import App from './App'
 import router from './router'
 
 Vue.config.productionTip = false
+import iview from 'iview';
+import 'iview/dist/styles/iview.css';
 
+Vue.use(iview)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
