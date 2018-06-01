@@ -7,8 +7,11 @@ import router from './router'
 Vue.config.productionTip = false
 import iview from 'iview';
 import 'iview/dist/styles/iview.css';
-
 Vue.use(iview)
+
+import VueClipboards from 'vue-clipboards';
+Vue.use(VueClipboards);
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

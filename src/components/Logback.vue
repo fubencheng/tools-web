@@ -23,7 +23,8 @@
       </FormItem>
     </Form>
     <div>
-      <Input v-model="xmlContent" type="textarea" :autosize="{minRows: 25, maxRows: 50}"></Input>
+      <Button v-if="xmlContent != ''" class="btn-clipboard" v-clipboard="xmlContent" @success="handleSuccess" @error="handleError">点我剪切</Button>
+      <Input v-model="xmlContent" type="textarea" rows="30"/>
     </div>
   </div>
 </template>
@@ -31,51 +32,58 @@
 <script>
   import axios from 'axios';
   import LogbackAPI from '@/urls/LogbackAPI';
+  import clipboard from 'clipboard';
   export default {
-    name:'Logback',
-    data() {
-      return {
-        xmlContent:'',
-        formItem: {
-          appName:'',
-          deployType:'micro',
-          logType:['INFO', 'ERROR']
-        },
-        ruleValidate: {
-          appName: [
-            { required: true, message: '应用名不能为空！', trigger: 'blur' }
-          ],
-          deployType: [
-            { required: true, message: '发布方式不能为空！', trigger: 'change' }
-          ],
-          logType: [
-            { required: true, type: 'array', min: 1, message: '至少要有一个日志类别！', trigger: 'change' }
-          ],
-        }
-      }
-    },
-    methods: {
-      handleSubmit(name){
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            axios.get(LogbackAPI.downloadLogbackXml, {
-              params:{
-                appName: this.formItem.appName,
-                source: this.formItem.deployType,
-                logType: this.formItem.logType.join("|")
-              }
-            }).then((resp) => {
-              this.xmlContent = resp.data;
-              this.$Message.success('文件已经生成！');
-            }).catch((error) => {
-              this.$Message.error('哎呀，出错啦！');
-              this.xmlContent = '';
-            })
+      name:'Logback',
+      data() {
+        return {
+          xmlContent:'',
+          formItem: {
+            appName:'',
+            deployType:'micro',
+            logType:['INFO', 'ERROR']
+          },
+          ruleValidate: {
+            appName: [
+              { required: true, message: '应用名不能为空！', trigger: 'blur' }
+            ],
+            deployType: [
+              { required: true, message: '发布方式不能为空！', trigger: 'change' }
+            ],
+            logType: [
+              { required: true, type: 'array', min: 1, message: '至少要有一个日志类别！', trigger: 'change' }
+            ],
           }
-        })
+        }
+      },
+      methods: {
+        handleSubmit(name){
+          this.$refs[name].validate((valid) => {
+            if (valid) {
+              axios.get(LogbackAPI.downloadLogbackXml, {
+                params:{
+                  appName: this.formItem.appName,
+                  source: this.formItem.deployType,
+                  logType: this.formItem.logType.join("|")
+                }
+              }).then((resp) => {
+                this.xmlContent = resp.data;
+                this.$Message.success('文件已经生成！');
+              }).catch((error) => {
+                this.$Message.error('哎呀，出错啦！');
+                this.xmlContent = '';
+              })
+            }
+          })
+        },
+        handleSuccess(e) {
+          this.xmlContent = '';
+        },
+        handleError(e) {
+          this.$Message.error('哎呀，不支持剪切！');
+        },
       }
     }
-  }
 </script>
 
 <style lang="scss" scoped>
