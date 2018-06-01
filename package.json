@@ -10,8 +10,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "echarts": "^4.1.0",
     "axios": "^0.18.0",
+    "echarts": "^4.1.0",
     "iview": "^2.14.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
